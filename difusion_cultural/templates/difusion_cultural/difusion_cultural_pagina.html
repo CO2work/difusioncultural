@@ -1,0 +1,275 @@
+{% extends "difusion_cultural/base.html" %}
+{% load wagtailimages_tags wagtailcore_tags wagtail_html_support navigation_tags gallery_tags %}
+
+{% block body_class %}template-difusionculturalpagina{% endblock %}
+
+
+  {% block extra_css %}
+  <!-- PHOTOSWIPE -->
+  <!-- Core CSS file -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin="anonymous">
+
+  <!-- Skin CSS file (styling of UI - buttons, caption, etc.)
+       In the folder of skin CSS file there are also:
+       - .png and .svg icons sprite,
+       - preloader.gif (for browsers that do not support CSS animations) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin="anonymous">
+  {% endblock extra_css %}
+
+
+{% block navigation %}
+
+  {% include "./includes/navigation_siblings.html" %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="hero">
+  <div class="owl-carousel-article-gallery article-hero"> <!-- to add class: owl-carousel -->
+    {% block hero %}
+
+      {% include './includes/hero.html' %}
+
+    {% endblock hero %}
+  </div>
+</div>
+
+    {% block grid %}
+    <div class="grid-container">
+      <div class="grid-x">
+        {% block main-cell %}
+        <div class="medium-10 medium-offset-1 large-6 large-offset-1 cell intro-offset">
+
+          <div class="intro card box-shadow">
+            <h4 class="title">{{ page.title }}</h4>
+
+                {{ page.introduccion|richtext }}
+
+          </div>
+          <div class="article-body">
+
+            {{ page.cuerpo }}
+
+
+          </div>
+        </div>
+
+
+        {% endblock main-cell %}
+
+        {% block sidebar %}
+        <div class="medium-10 medium-offset-1 large-3 large-offset-1 cell side-bar">
+          <hr>
+
+          <h5>Otros sitios de interés:</h5>
+          <ul class="menu vertical">
+            {% for post in page.get_siblings %}
+                <li><a href="{% pageurl post %}">{{ post.title }}</a></li>
+            {% endfor %}
+          </ul>
+
+        </div>
+        {% endblock sidebar %}
+
+        {% if page.galeria %}
+        <div class="medium-10 medium-offset-1 cell intro-offset">
+          <h4>Galería</h4>
+            {% gallery page.galeria %}
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+    {% endblock grid %}
+
+
+
+
+{% endblock content %}
+
+
+{% block extra_js %}
+
+
+
+  <!-- PHOTOSWIPE -->
+  <script type="text/javascript">
+        // var photoswipe_stylesheet = document.createElement('link');
+        //
+        // photoswipe_stylesheet.rel='stylesheet';
+        // photoswipe_stylesheet.href='https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css';
+        // photoswipe_stylesheet.integrity='sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=';
+        // photoswipe_stylesheet.crossorigin='anonymous';
+        // photoswipe_stylesheet.type = 'text/css';
+        //
+        // document.getElementsByTagName('head')[0].appendChild(photoswipe_stylesheet);
+        //
+        // var photoswipe_skin_stylesheet = document.createElement('link');
+        //
+        // photoswipe_skin_stylesheet.rel='stylesheet';
+        // photoswipe_skin_stylesheet.href='https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css';
+        // photoswipe_skin_stylesheet.integrity='sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=';
+        // photoswipe_skin_stylesheet.crossorigin='anonymous';
+        // photoswipe_skin_stylesheet.type = 'text/css';
+        //
+        // document.getElementsByTagName('head')[0].appendChild(photoswipe_skin_stylesheet);
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/default-skin/default-skin.min.css" integrity="sha256-Q9bBMw/rHRRag46GDWY84J3elDNc8JJjKXL9tIC4oe8=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.min.css" integrity="sha256-LWdHSKWG7zv3DTpee8YAgoTfkj3gNkfauF624h4P2Nw=" crossorigin="anonymous" />
+
+  <!-- Core JS file -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.js"></script>
+
+  <!-- UI JS file -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe-ui-default.js"></script>
+
+  <script type="text/javascript">
+    /*!
+    jqPhotoSwipe v0.1.1 - jQuery for PhotoSwipe
+    https://ergec.github.io/jQuery-for-PhotoSwipe/
+    */
+    (function (jQuery) {
+    	jQuery.fn.jqPhotoSwipe = function (options) {
+    		if (this.length) {
+    			var parseHash = function() {
+    				var hash = window.location.hash.substring(1),
+    				params = {};
+    				var vars = hash.split('&');
+    				for (var i = 0; i < vars.length; i++) {
+    					if(!vars[i]) {
+    						continue;
+    					}
+    					var pair = vars[i].split('=');
+    					if(pair.length < 2) {
+    						continue;
+    					}
+    					params[pair[0]] = pair[1];
+    				}
+
+    				if(params.gid) {
+    					params.gid = params.gid;
+    				}
+
+    				return params;
+    			};
+    			var _photoswipe = {};
+    			var defaults = {
+    				forceSingleGallery: false,
+    				galleryOpen: function (gallery) {
+
+    				}
+    			};
+    			_photoswipe.galleries = [];
+    			_photoswipe.galleriesindex = [];
+    			var $galleryid = 0;
+    			var pswpElement;
+    			if ($(".pswp[role='dialog']").length) {
+    				pswpElement = $(".pswp[role='dialog']")[0];
+    			} else {
+    				var pswpHTML = '<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"><div class="pswp__bg"></div><div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div><div class="pswp__item"></div><div class="pswp__item"></div></div><div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button><button class="pswp__button pswp__button--share" title="Share"></button><button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button><button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div> </div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button><button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div>';
+    				pswpElement = $(pswpHTML).appendTo("body")[0];
+    			}
+    			var forcedGalleryId = "pswg-forced";
+    			this.each(function () {
+    				var $options = $.extend(defaults, options);
+    				var $this = $(this);
+    				var $galleryname = $this.data("fancybox-group");
+    				if (!$galleryname) {
+    					if ($options.forceSingleGallery) {
+    						$galleryname = forcedGalleryId;
+    						$this.data("fancybox-group", $galleryname);
+    					} else {
+    						$galleryname = "pswgname" + (_photoswipe.galleriesindex.length);
+    						$this.data("fancybox-group", $galleryname);
+    					}
+    				}
+    				if (_photoswipe.galleriesindex.indexOf($galleryname) === -1) {
+    					$galleryid = _photoswipe.galleriesindex.length;
+    					_photoswipe.galleriesindex.push($galleryname);
+    					_photoswipe.galleries[$galleryid] = {};
+    					_photoswipe.galleries[$galleryid].items = [];
+    					_photoswipe.galleries[$galleryid].i = 0;
+    				} else {
+    					$galleryid = _photoswipe.galleriesindex.indexOf($galleryname);
+    				}
+    				var $galleryid2 = $galleryid;
+    				$this.data("i", _photoswipe.galleries[$galleryid].i);
+    				$this.data("gid", $galleryname);
+    				_photoswipe.galleries[$galleryid2].items.push({
+    					src: $this.attr("href"),
+    					title: $this.attr("title"),
+    					w: 0,
+    					h: 0
+    				});
+    				$this.off("click").on("click", function (e) {
+    					e.preventDefault();
+    					var index = $(this).data("i");
+    					$options.index = index;
+    					$options.galleryUID = $(this).data("gid");
+    					_photoswipe.galleries[$galleryid2].obj = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, _photoswipe.galleries[$galleryid2].items, $options);
+    					_photoswipe.galleries[$galleryid2].obj.init();
+
+    					_photoswipe.galleries[$galleryid2].obj.listen('initialZoomInEnd', function() {
+    						$options.galleryOpen(_photoswipe.galleries[$galleryid2].obj);
+    					});
+    					_photoswipe.galleries[$galleryid2].obj.listen('imageLoadComplete', function(index, item) {
+    						loadImg(index, item);
+    					});
+    					_photoswipe.galleries[$galleryid2].obj.listen('gettingData', function(index, item) {
+    						loadImg(index, item);
+    					});
+    					function loadImg(index, item) {
+    						if (item.w == 0 && item.h == 0) {
+    							var imgpreload = new Image();
+    							imgpreload.onload = function() {
+    								item.w = this.width;
+    								item.h = this.height;
+    								item.needsUpdate = true;
+    								_photoswipe.galleries[$galleryid2].obj.updateSize(true);
+    							};
+    							imgpreload.src = item.src;
+    						}
+    					}
+    				});
+    				var $hashparams = parseHash();
+    				if ($hashparams.gid) {
+    					if ($hashparams.gid.toString() === $galleryname && $hashparams.pid.toString() === (_photoswipe.galleries[$galleryid].i + 1).toString()) {
+    						$this.trigger("click");
+    					}
+    				}
+    				_photoswipe.galleries[$galleryid].i ++;
+    			});
+    			return _photoswipe;
+    		}
+    	};
+    })(jQuery);
+
+  </script>
+
+
+
+  <script>
+    $(document).ready(function () {
+  	//By default, plugin uses `data-fancybox-group` attribute to create galleries.
+    	$(".fancybox").jqPhotoSwipe({
+    		galleryOpen: function (gallery) {
+    			//with `gallery` object you can access all methods and properties described here http://photoswipe.com/documentation/api.html
+    			//console.log(gallery);
+    			//console.log(gallery.currItem);
+    			//console.log(gallery.getCurrentIndex());
+    			//gallery.zoomTo(1, {x:gallery.viewportSize.x/2,y:gallery.viewportSize.y/2}, 500);
+    			gallery.toggleDesktopZoom();
+    		}
+    	});
+    	//This option forces plugin to create a single gallery and ignores `data-fancybox-group` attribute.
+    	$(".forcedgallery > a").jqPhotoSwipe({
+    		forceSingleGallery: true
+    	});
+    });
+  </script>
+
+
+{% endblock extra_js %}
+

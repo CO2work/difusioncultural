@@ -1,0 +1,173 @@
+{% extends "difusion_cultural/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags %}
+
+{% block body_class %}template-difusionculturalcartelera{% endblock %}
+
+
+{% block navigation %}
+
+  {% include "./includes/navigation.html" %}
+
+{% endblock %}
+
+
+
+{% block content %}
+
+{% block grid %}
+
+<div class="grid-container articles-grid">
+  <h3 class="top-pusher">{{ page.title }}</h3>
+  <div class="grid-x">
+    <div class="cell-4 medium-offset-10 text-right">
+      <a href="/cartelera/archivado" class="tiny button"><i class="fa fa-clock-o" aria-hidden="true"></i> Ver eventos pasados</a>
+    </div>
+  </div>
+  <div class="grid-x grid-margin-x grid-margin-y" data-equalizer data-equalize-on="medium" id="equalized-grid" data-equalize-by-row="true">
+    {% block main-cell %}
+
+    {% for post in posts %}
+    <div class="medium-6 large-4 cell">
+
+      <a href="/{{ post.specific.difusion_cultural_cartelera_slug }}/categoria/{{ post.specific.categoria.slug }}/"><span
+              class="label {{ post.specific.categoria.slug }}">{{ post.specific.categoria }}</span></a>
+
+      <div class="card borderless box-shadow" data-equalizer-watch>
+
+
+
+        {% image post.specific.imagen fill-700x400 as postimage %}
+        <a href="{% pageurl post %}">
+          <img src="{{ postimage.url }}" alt="{{ post.title }}">
+        </a>
+        <div class="card-section">
+          <h6><a href="{% pageurl post %}">{{ post.title }}</a></h6>
+          <p>
+            {{ post.specific.introduccion|richtext }}
+          </p>
+
+          <ul class="menu vertical">
+            <li>
+              <small>
+                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                {% if post.specific.fecha_inicio != post.specific.fecha_fin %}
+                  {% if post.specific.fecha_inicio.month != post.specific.fecha_fin.month %}
+                    {% if post.specific.fecha_inicio.year != post.specific.fecha_fin.year %}
+                      {{ post.specific.fecha_inicio|date:"j \d\e F \d\e\l Y" }}
+                      {% else %}
+                      {{ post.specific.fecha_inicio|date:"j \d\e F" }}
+                    {% endif %}
+                  {% else %}
+                    {{ post.specific.fecha_inicio|date:"j" }}
+                  {% endif %}
+                {% else %}
+                {{ post.specific.fecha_inicio|date:"j \d\e F \d\e\l Y" }}
+                {% endif %}
+                {% if post.specific.fecha_inicio != post.specific.fecha_fin %}
+                    al {{ post.specific.fecha_fin|date:"j \d\e F \d\e\l\ Y" }}
+                {% endif %}
+              </small>
+            </li>
+
+            <li>
+              <small>
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                {{ post.specific.hora_inicio }} - {{ post.specific.hora_fin }}
+              </small>
+            </li>
+
+            {% if post.specific.ubicacion %}
+
+            <li class="ubicacion-item-icon">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+              {{ post.specific.ubicacion|richtext }}
+            </li>
+            {% endif %}
+
+
+          </ul>
+
+          {% if post.specific.consideraciones %}
+          <p>
+            <small>
+              {{ post.specific.consideraciones|richtext }}
+            </small>
+          </p>
+          {% endif %}
+          <a href="{% pageurl post %}" class="button small primary-color">Ver</a>
+
+          <div class="tag-cloud">
+            {% for tag in post.specific.etiquetas.all %}
+            <a class="tag-cloud-individual-tag" href="/cartelera/etiqueta/{{ tag.slug }}">{{ tag }}</a>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+    {% endblock main-cell %}
+
+
+  </div>
+
+  {% if posts.paginator.num_pages > 1 %}
+      <div class="grid-x grid-margin-x grid-margin-y" data-equalizer data-equalize-on="medium">
+          <div class="medium-12 large-12 cell">
+              {{ posts.paginator.num_pages1 }}
+              {{ paginas1 }}
+
+              <nav aria-label="Pagination">
+                  <ul class="pagination">
+                      {% if posts.has_previous %}
+                      <li class="pagination-previous"><a href="?p=1" aria-label="Next page">Primera <span class="show-for-sr">página</span></a></li>
+                      <li class="pagination-previous"><a href="?p={{ posts.previous_page_number }} " aria-label="Next page">Ant. <span class="show-for-sr">página</span></a></li>
+                      {% else %}
+                      <li class="pagination-previous disabled">Primera <span class="show-for-sr">página</span></li>
+                      <li class="pagination-previous disabled">Ant. <span class="show-for-sr">página</span></li>
+                      {% endif %}
+
+                      {% if posts.paginator.num_pages < 8 %}
+                      {% for page_num in posts.paginator.page_range %}
+                      {% if page_num == posts.number %}
+                      <li class="current"><span class="show-for-sr">En página</span>{{ page_num }} </li>
+                      {% else %}
+                      <li><a href="?p={{ page_num }} " aria-label="Página {{ page_num }} ">{{ page_num }} </a></li>
+                      {% endif %}
+                      {% endfor %}
+                      {% else %}
+
+                      {% for page_num in paginas %}
+                      {% if page_num == 0 %}
+                      <li class="ellipsis" aria-hidden="true"></li>
+                      {% elif page_num == posts.number %}
+                      <li class="current"><span class="show-for-sr">En página</span>{{ page_num }} </li>
+                      {% else %}
+                      <li><a href="?p={{ page_num }} " aria-label="Página {{ page_num }} ">{{ page_num }} </a></li>
+                      {% endif %}
+                      {% endfor %}
+
+                      {% endif %}
+
+                      {% if posts.has_next %}
+                      <li class="pagination-next"><a href="?p={{ posts.next_page_number }} " aria-label="Next page">Sig. <span class="show-for-sr">página</span></a></li>
+                      <li class="pagination-next"><a href="?p={{ posts.paginator.num_pages }} " aria-label="Next page">Última <span class="show-for-sr">página</span></a></li>
+                      {% else %}
+                      <li class="pagination-next disabled">Sig. <span class="show-for-sr">página</span></li>
+                      <li class="pagination-next disabled">Última <span class="show-for-sr">página</span></li>
+                      {% endif %}
+
+                  </ul>
+              </nav>
+
+          </div>
+      </div>
+  {% endif %}
+
+
+</div>
+{% endblock grid %}
+
+{% endblock content %}
+

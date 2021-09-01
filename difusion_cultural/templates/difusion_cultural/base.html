@@ -1,0 +1,224 @@
+{% load static wagtailuserbar wagtailimages_tags %}
+
+<!doctype html>
+<html class="no-js" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+    <meta name="description" content="">
+    
+    <meta name="theme-color" content="#333333">
+    <meta name="msapplication-navbutton-color" content="#333333">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#333333">
+    <meta name="revisit-after" content="1 week">
+    <meta name="author" content="difusion cultural y extensión universitaria - umsnh">
+    
+    <meta name="keywords" content="">
+    <meta name="title" content="{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}">
+    
+    <meta name="twitter:card"             content="summary_large_image">
+    <meta name="twitter:site"             content="@culturaumsnh">
+    <meta name="twitter:creator"          content="@culturaumsnh">
+    <meta property="og:title"             content="{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}" />
+    <meta property="og:type"              content="website" />
+    <meta property="og:locale"            content="es_MX" />
+    
+    {% image page.imagen fill-800x600 as semihero_medium %}
+    
+    <meta property="og:description"       content="{{ page.introduccion|truncatechars:56 }}" />
+    <meta property="og:url"               content="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{ request.path }}" />
+    <meta property="og:image" itemprop="image"  content="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{ semihero_medium.url }}" />
+
+    <title>
+      {% block title %}
+          {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+      {% endblock %}
+      {% block title_suffix %}
+          {% with self.get_site.site_name as site_name %}
+              {% if site_name %}- {{ site_name }}{% endif %}
+          {% endwith %}
+      {% endblock %}
+    </title>
+
+    {# Global stylesheets #}
+        <link rel="stylesheet" type="text/css" href="{% static 'difusion_cultural/css/app.css' %}">
+        <!-- HACK awesome font -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.css">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/assets/owl.carousel.min.css" integrity="sha256-UhQQ4fxEeABh4JrcmAJ1+16id/1dnlOEVCFOxDef9Lw=" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/assets/owl.theme.default.min.css" integrity="sha256-kksNxjDRxd/5+jGurZUJd1sdR2v+ClrCl3svESBaJqw=" crossorigin="anonymous">
+        <!-- font -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+
+    {% block extra_css %}
+        {# Override this in templates to add extra stylesheets #}
+    {% endblock %}
+
+  </head>
+<body class="{% block body_class %}{% endblock %}">
+  {% wagtailuserbar %}
+
+  {% block navigation %}
+  {% endblock navigation %}
+
+<div class="off-canvas-content" data-off-canvas-content>
+
+
+
+{% block content %}
+    {% block hero %}
+    {% endblock hero %}
+
+
+    {% block grid %}
+
+        {% block main-cell %}
+        {% endblock main-cell %}
+
+        {% block sidebar %}
+        {% endblock sidebar %}
+
+    {% endblock grid %}
+
+
+{% endblock %}
+
+
+
+
+{% include "./includes/footer.html" %}
+</div> <!-- off canvas page content Close-->
+
+<!-- Social Button HTML -->
+<section class="share-buttons-menu">
+  <!-- Facebook -->
+  <ul class="menu medium-vertical expanded">
+    <li class="small-flex-child-grow medium-flex-child-auto">
+      <a href="//facebook.com/sharer/sharer.php?u={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{ request.path }}" class="btn share-btn facebook">
+        <i class="fa fa-facebook facebook" aria-label="facebok"></i>
+      </a>
+    </li>
+    <li class="small-flex-child-grow medium-flex-child-auto">
+      <!-- Twitter -->
+      <a href="//twitter.com/share?url={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{ request.path }}&text={{ page.title|urlencode }}%20#UMSNHesCultura&via=@CulturaUMSNH" class="btn share-btn twitter">
+        <i class="fa fa-twitter twitter" aria-label="twitter"></i>
+      </a>
+    </li>
+    <li class="small-flex-child-grow medium-flex-child-auto">
+      <!-- Whatsapp -->
+      <a href="https://wa.me/?text={{ page.title|urlencode }}%20{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{ request.path }}" class="btn share-btn whatsapp">
+        <i class="fa fa-whatsapp whatsapp" aria-label="whatsapp"></i>
+      </a>
+    </li>
+    <li class="small-flex-child-grow medium-flex-child-auto">
+      <!-- Reddit (url, title) -->
+      <a href="tg://msg_url?url={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{ request.path }}&text={{ page.title|urlencode }}%20#UMSNHesCultura" class="btn share-btn telegram">
+        <i class="fa fa-telegram telegram" aria-label="telegram"></i>
+      </a>
+    </li>
+    <li class="small-flex-child-grow medium-flex-child-auto">
+      <!-- Email -->
+      <a href="mailto:?subject={{ page.title|urlencode }}&body=#UMSNHesCultura{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{ request.path }}" class="btn share-btn email">
+        <i class="fa fa-envelope envelope" aria-label="email"></i>
+      </a>
+    </li>
+
+
+
+  </ul>
+
+</section>
+
+{# Global javascript #}
+<script type="text/javascript" src="{% static 'difusion_cultural/js/app.js' %}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/owl.carousel.min.js" integrity="sha256-pTxD+DSzIwmwhOqTFN+DB+nHjO4iAsbgfyFq5K5bcE0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/owl.carousel2.thumbs@0.1.8/dist/owl.carousel2.thumbs.min.js" integrity="sha256-n/Sk5oyNcg1TfOAocafP1yMFFp8NLFu5EprwBqbnv1E=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+      jQuery('.owl-carousel-home-front').owlCarousel({
+          loop:true,
+          autoplay:true,
+          autoplayTimeout:7000,
+          items:1,
+          margin:0,
+          nav:true,
+          dots:true,
+            thumbs: false,
+            thumbImage: false,
+          // thumbsPrerendered: false,
+          thumbContainerClass: 'owl-thumbs',
+          thumbItemClass: 'owl-thumb-item',
+          responsiveClass:true,
+          // responsive:{
+          //     0:{
+          //         items:1,
+          //         stagePadding: 0,
+          //         // thumbs: false,
+          //         // thumbContainerClass: 'owl-thumbs',
+          //         // thumbItemClass: 'owl-thumb-item',
+          //         // nav:false
+          //     },
+          //     600:{
+          //         items:1,
+          //         stagePadding: 0,
+          //         // thumbs: true,
+          //         // nav:false,
+          //         // video: true,
+          //     },
+          //     1000:{
+          //         items:1,
+          //         // stagePadding: 0,
+          //         // thumbs: true,
+          //         // nav:false,
+          //         // video: true,
+          //     }
+          // }//,
+          // navText:['<i class="fa fa-2x fa-chevron-left"></i>','<i class="fa fa-2x fa-chevron-right"></i>']
+      });
+
+      jQuery('.owl-gallery').owlCarousel({
+          loop:true,
+          items:1,
+          margin:0,
+          nav:true,
+          dots:true,
+          responsiveClass:true,
+          thumbs: true,
+          thumbsPrerendered: false,
+          thumbImage: true,
+          thumbContainerClass: 'owl-gallery-thumbs',
+          autoWidth:true,
+          responsive:{
+              0:{
+                  items:1
+              },
+              600:{
+                  items:1
+              },
+              1000:{
+                  items:1
+              }
+          }
+      });
+
+</script>
+
+{% block extra_js %}
+    {# Override this in templates to add extra javascript #}
+{% endblock %}
+
+
+<script type="text/javascript">
+// scriptanalytics
+// Google analytics
+
+
+</script>
+</body>
+</html>

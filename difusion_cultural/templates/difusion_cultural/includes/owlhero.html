@@ -1,0 +1,78 @@
+{% load wagtailimages_tags wagtailcore_tags static %}
+
+
+
+{% for post in page.get_nuevos_bisnietos %}
+<div class="item">
+
+  {% image post.specific.imagen fill-600x800 as hero_small %}
+  {% image post.specific.imagen fill-800x500 as hero_medium %}
+  {% image post.specific.imagen fill-1400x550 as hero_large %}
+  {% image post.specific.imagen fill-1600x650 as hero_xlarge %}
+  <figure style="background-image: url('{{ hero_medium.url }}')"
+          data-interchange="[{{ hero_small.url }}, small],
+                            [{{ hero_medium.url }}, medium],
+                            [{{ hero_large.url }}, large],
+                            [{{ hero_xlarge.url }}, xlarge]
+                            ">
+
+  </figure>
+
+  <figcaption class="grid-x grid-padding-x grid-padding-y {{ post.specific.categoria.slug }}">
+    <span class="label {{ post.specific.categoria.slug }}"><small>{{ post.specific.categoria }}</small></span>
+    <div class="cell large-12">
+      <div>
+        <a href="{% pageurl post %}">
+          <h4 class="font-bold">{{ post.title }}</h4>
+          {{ post.specific.introduccion|richtext }}
+
+          <ul class="menu vertical owl-links">
+            <li>
+              <small>
+                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                {% if post.specific.fecha_inicio != post.specific.fecha_fin %}
+                  {% if post.specific.fecha_inicio.month != post.specific.fecha_fin.month %}
+                    {% if post.specific.fecha_inicio.year != post.specific.fecha_fin.year %}
+                      {{ post.specific.fecha_inicio|date:"j \d\e F \d\e\l Y" }}
+                      {% else %}
+                      {{ post.specific.fecha_inicio|date:"j \d\e F" }}
+                    {% endif %}
+                  {% else %}
+                    {{ post.specific.fecha_inicio|date:"j" }}
+                  {% endif %}
+                {% else %}
+                {{ post.specific.fecha_inicio|date:"j \d\e F \d\e\l Y" }}
+                {% endif %}
+                {% if post.specific.fecha_inicio != post.specific.fecha_fin %}
+                    al {{ post.specific.fecha_fin|date:"j \d\e F \d\e\l\ Y" }}
+                {% endif %}
+              </small>
+            </li>
+
+            <li>
+              <small>
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                {{ post.specific.hora_inicio }} - {{ post.specific.hora_fin }}
+              </small>
+            </li>
+
+
+          </ul>
+
+          <b class="owlfront-item-details">
+            <button class="button tiny primary">Ver más</button>
+          </b>
+        </a>
+
+        <div class="tag-cloud">
+          {% for tag in post.specific.etiquetas.all %}
+          <a class="tag-cloud-individual-tag" href="/cartelera/etiqueta/{{ tag.slug }}">{{ tag }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </figcaption>
+
+</div>
+{% endfor %}
+

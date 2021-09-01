@@ -1,0 +1,441 @@
+{% extends "difusion_cultural/base.html" %}
+{% load wagtailimages_tags wagtailcore_tags wagtail_html_support navigation_tags thumbnail %}
+
+{% block body_class %}template-difusionculturalhomepage{% endblock %}
+
+
+{% block navigation %}
+
+  {% include "./includes/navigation.html" %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="owl-hero-carousel">
+  <div class="owl-carousel owl-carousel-home-front owl-hero"> <!-- to add class: owl-carousel -->
+    {% block hero %}
+
+      {% include './includes/owlhero.html' %}
+
+    {% endblock hero %}
+  </div>
+</div>
+
+
+{% block grid %}
+<div class="grid-container">
+  <div class="grid-x grid-margin-x grid-margin-y" data-equalizer data-equalize-on="medium" id="equalized-grid" data-equalize-by-row="true">
+    {% block main-cell %}
+
+    {% for post in page.get_nuevos_bisnietos %}
+    <div class="medium-6 large-4 cell">
+
+      <a href="/{{ post.specific.difusion_cultural_cartelera_slug }}/categoria/{{ post.specific.categoria.slug }}/"><span
+              class="label {{ post.specific.categoria.slug }}">{{ post.specific.categoria }}</span></a>
+
+      <div class="card borderless box-shadow" data-equalizer-watch>
+
+
+
+        {% image post.specific.imagen fill-700x400 as postimage %}
+        <a href="{% pageurl post %}">
+          <img src="{{ postimage.url }}" alt="{{ post.title }}">
+        </a>
+        <div class="card-section">
+          <h6><a href="{% pageurl post %}">{{ post.title }}</a></h6>
+          <p>
+            {{ post.specific.introduccion|richtext }}
+          </p>
+
+          <ul class="menu vertical">
+            <li>
+              <small>
+                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                {% if post.specific.fecha_inicio != post.specific.fecha_fin %}
+                  {% if post.specific.fecha_inicio.month != post.specific.fecha_fin.month %}
+                    {% if post.specific.fecha_inicio.year != post.specific.fecha_fin.year %}
+                      {{ post.specific.fecha_inicio|date:"j \d\e F \d\e\l Y" }}
+                      {% else %}
+                      {{ post.specific.fecha_inicio|date:"j \d\e F" }}
+                    {% endif %}
+                  {% else %}
+                    {{ post.specific.fecha_inicio|date:"j" }}
+                  {% endif %}
+                {% else %}
+                {{ post.specific.fecha_inicio|date:"j \d\e F \d\e\l Y" }}
+                {% endif %}
+                {% if post.specific.fecha_inicio != post.specific.fecha_fin %}
+                    al {{ post.specific.fecha_fin|date:"j \d\e F \d\e\l\ Y" }}
+                {% endif %}
+              </small>
+            </li>
+
+            <li>
+              <small>
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                {{ post.specific.hora_inicio }} - {{ post.specific.hora_fin }}
+              </small>
+            </li>
+
+            {% if post.specific.ubicacion %}
+
+            <li class="ubicacion-item-icon">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                {{ post.specific.ubicacion|richtext }}
+            </li>
+            {% endif %}
+
+
+          </ul>
+          <a href="{% pageurl post %}" class="button small primary-color">Ver</a>
+
+          <div class="tag-cloud">
+            {% for tag in post.specific.etiquetas.all %}
+            <a class="tag-cloud-individual-tag" href="/cartelera/etiqueta/{{ tag.slug }}">{{ tag }}</a>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+{% endblock main-cell %}
+
+
+  </div>
+</div>
+
+
+<br>
+<br>
+<br>
+<section class="background-light-blue">
+  <div class="grid-container">
+    <div class="grid-x grid-margin-x grid-margin-y">
+
+
+      <div class="medium-10 medium-offset-1 large-10 large-offset-1 cell">
+
+        <h4>
+          Secretaría de Difusión Cultural y Extensión Universitaria
+        </h4>
+
+        <p>
+          Somos la instancia institucional que se encarga de diseñar y ejecutar la política cultural de la Universidad, a través de un programa de animación cultural que llegue no únicamente a los universitarios sino a la sociedad en general.
+        </p>
+
+
+
+      </div>
+
+
+
+    </div>
+  </div>
+</section>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="marketing-site-content-section">
+  <div class="marketing-site-content-section-img" style="background-size:cover; height:100%; width:100%; background-image:url('//{{ request.get_host }}//media/images/agenda_dig_cult.2e16d0ba.fill-800x500.jpg');">
+    <img src="//{{ request.get_host }}//media/images/agenda_dig_cult.2e16d0ba.fill-800x500.jpg" alt="Estrategia Digital de Cultura" />
+  </div>
+  <div class="marketing-site-content-section-block grid-x">
+    <div class="medium-10 medium-offset-1 cell">
+      <h3>Estrategia Digital de Cultura</h3>
+      <p class="lead">“Construyendo capacidades para el futuro”.</p>
+      <a href="/transformacion-digital/estrategia-digital-de-cultura/" class="round button small">Leer más</a>
+    </div>
+  </div>
+</div>
+
+<div class="marketing-site-content-section mscs-second">
+  <div class="marketing-site-content-section-block grid-x">
+    <div class="medium-10 medium-offset-1 cell">
+      <h3>Transformación Digital</h3>
+      <p class="lead">Para la Universidad Michoacana, las vanguardias en tecnología y educación son de suma importancia, por lo cual desarrolla e impulsa trabajos de transformación digital en todas sus áreas.</p>
+      <a href="/transformacion-digital/" class="round button small">Leer más</a>
+    </div>
+  </div>
+  <div class="marketing-site-content-section-img" style="background-size:cover; height:100%; width:100%; background-image:url('//{{ request.get_host }}/media/images/dtdigital.2e16d0ba.fill-800x500.jpg');">
+    <img src="//{{ request.get_host }}/media/images/dtdigital.2e16d0ba.fill-800x500.jpg" alt="Transformación Digital" />
+  </div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+
+<section class="background-gray">
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="medium-12 cell section-title">
+      <h4>Blog</h4>
+      <h6>Artículos y noticias de cultura y deporte</h6>
+    </div>
+  </div>
+  <div class="grid-x grid-margin-x grid-margin-y" data-equalizer data-equalize-on="medium" id="equalized-grid" data-equalize-by-row="true">
+    {% for post in page.get_articulos_blog %}
+
+    <div class="small-6 medium-4 large-3 cell">
+
+
+      <a href="/{{ post.specific.difusion_cultural_cartelera_slug }}blog/categoria/{{ post.specific.categoria.slug }}/"><span
+              class="label {{ post.specific.categoria.slug }}">{{ post.specific.categoria }}</span></a>
+
+
+      <div class="card borderless box-shadow" data-equalizer-watch>
+
+        {% image post.specific.imagen fill-600x450 as postimage %}
+        <a href="{% pageurl post %}">
+          <img src="{{ postimage.url }}" alt="{{ post.title }}">
+        </a>
+        <div class="card-section">
+          <h6><a href="{% pageurl post %}">{{ post.title }}</a></h6>
+
+          <ul class="menu vertical">
+            {% if post.specific.first_published_at %}
+            <li>
+              <small>
+                {{ post.specific.first_published_at|date:"j F Y" }}
+              </small>
+            </li>
+            {% endif %}
+
+            {% if post.specific.autor %}
+            <li>
+              <small>
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <em>
+                {{ post.specific.autor }}
+              </em>
+              </small>
+            </li>
+            {% endif %}
+          </ul>
+
+          <div class="tag-cloud">
+            {% for tag in post.specific.etiquetas.all %}
+            <a class="tag-cloud-individual-tag" href="/blog/etiqueta/{{ tag.slug }}">{{ tag }}</a>
+            {% endfor %}
+          </div>
+
+
+          <a href="{% pageurl post %}" class="button small primary">Leer más</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+</section>
+
+
+
+<section class="instagram-grid">
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="medium-12 cell section-title">
+        <h4>Nuestras historias</h4>
+        <h3>#SomosCulturaUMSNH</h3>
+      </div>
+
+      {% for media in recent_media %}
+      <div class="small-4 medium-2 cell">
+        <div class="django_instagram_media_wall_item">
+          <a href="//instagram.com/p/{{ media.shortcode }}" target="_blank">
+            <img src="{{ media.thumbnail_src }}"/>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="medium-12 cell section-title">
+        <span>
+          Síguenos en Instagram
+        </span>
+        <a href="//instagram.com/cultura_umsnh" target="_blank">@cultura_umsnh</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<div class="grid-container articles-grid">
+      <h3 class="top-pusher">Galería de espacios
+        <br>
+        <small>y departamentos</small>
+      </h3>
+      <div class="grid-x grid-margin-x grid-margin-y" data-equalizer data-equalize-on="medium" id="equalized-grid">
+
+        <div class="medium-6 large-4 cell">
+          <div class="card borderless box-shadow" data-equalizer-watch>
+
+            <a href="/centro-cultural-universitario/">
+
+
+              <img src="//{{ request.get_host }}/media/images/ccu_0001__web_nRyRRzk.2e16d0ba.fill-800x500.jpg" alt="Centro Cultural Universitario">
+
+              <div class="card-section title-uppercase">
+                <h5>Centro Cultural Universitario</h5>
+                <p>
+                  Un espacio abierto, creativo e incluyente donde se comparten las distintas manifestaciones culturales de la Universidad para el fomento de una mejor sociedad
+                </p>
+              </div>
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <div class="medium-6 large-4 cell">
+          <div class="card borderless box-shadow" data-equalizer-watch>
+
+            <a href="/transformacion-digital/departamento-ciac/">
+
+
+              <img src="//{{ request.get_host }}/media/images/ciac_principal1_QrlwpUG.2e16d0ba.fill-800x500.jpg" alt="Centro de Información, Arte y Cultura">
+
+              <div class="card-section title-uppercase">
+                <h5>Centro de Información, Arte y Cultura</h5>
+                <p>
+                  Es una dependencia nicolaita comprometida con el desarrollo de la comunidad universitaria y la sociedad en general que contribuye con el desarrollo de eventos académicos
+                </p>
+              </div>
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <div class="medium-6 large-4 cell">
+          <div class="card borderless box-shadow" data-equalizer-watch>
+
+            <a href="/auditorios-teatros-e-infraestructura-cultural/">
+
+
+              <img src="//{{ request.get_host }}/media/images/teatro_jesus_ruben_romero__portada.2e16d0ba.fill-800x500.jpg" alt="Teatro José Rubén Romero">
+
+              <div class="card-section title-uppercase">
+                <h5>Auditorio teatros e infraestructura cultural</h5>
+                <p>
+                  Departamento que coordina los foros de espectáculos de música, danza, variedades e infantiles, así como festivales, asambleas y conferencias
+                </p>
+              </div>
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <div class="medium-6 large-4 cell">
+          <div class="card borderless box-shadow" data-equalizer-watch>
+
+            <a href="/exconvento-de-tiripetio/">
+
+
+              <img src="//{{ request.get_host }}/media/images/tiripetio_exconvento_001.2e16d0ba.fill-800x500.jpg" alt="ExConvento de Tiripetio">
+
+              <div class="card-section title-uppercase">
+                <h5>ExConvento de Tiripetío</h5>
+                <p>
+                  Centro de cultura e investigación en las inmediaciones de la ciudad de Morelia enfocado a la apreciación de la cultura regional, nacional y universal, a través de exposiciones plásticas, representaciones teatrales y conciertos
+                </p>
+              </div>
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <div class="medium-6 large-4 cell">
+          <div class="card borderless box-shadow" data-equalizer-watch>
+
+            <a href="/deportes-e-infraestructura-deportiva/">
+
+
+              <img src="//{{ request.get_host }}/media/images/8DA52C6E-C588-4CF7-AD50-AFCF09464FFD_NsYghwu.width-800.jpg" alt="Infraestructura deportiva">
+
+              <div class="card-section title-uppercase">
+                <h5>Deportes e infraestructura deportiva</h5>
+                <p>
+                  La UMSNH tiene la convicción de contribuir a la formación integral de la comunidad universitaria en su desarrollo psicológico, físico, ético y social, a través del desarrollo de actividades deportivas y la cultura física
+                </p>
+              </div>
+
+            </a>
+
+          </div>
+
+        </div>
+
+        </div>
+      </div>
+
+
+
+
+{% endblock grid %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#    {{ page }}  #}
+{#  #}
+{#    {% for post in page.get_children %}  #}
+{#        <h2><a href="{% pageurl post %}">--{{ post.title }}--</a></h2>  #}
+{#        {{ post.specific.intro }}  #}
+{#  #}
+{#  #}
+{#    {% endfor %}  #}
+{#    <hr />  #}
+{#    {% for post in page.get_nuevos_bisnietos %}  #}
+{#  #}
+{#        <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>  #}
+{#        {{ post.specific.introduccion }}  #}
+{#        {{ post.specific.fecha }}  #}
+{#        {{ post.specific.pk }}  #}
+{#        {{ post.specific.cuerpo }}  #}
+{#    {% endfor %}  #}
+
+
+{% endblock %}
+

@@ -1,0 +1,56 @@
+{% load static wagtailcore_tags navigation_tags %}
+
+
+<header>
+  <div data-sticky-container>
+    <nav class="title-bar title-bar-sticky-shrink" id="main-menu" data-sticky data-top-anchor="1" data-margin-top="0" data-sticky-on="small">
+        <div class="title-bar-left">
+          <ul class="menu">
+            <li class="logo">
+              <a href="/">
+                <img src="{% static 'difusion_cultural/img/logo/dif_imagologo_web_01.svg' %}" alt="img">
+                <img class="show-for-medium" src="{% static 'difusion_cultural/img/logo/dif_logotype_web_01.svg' %}" alt="logo">
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="title-bar-right">
+          <ul class="menu align-right dropdown" data-dropdown-menu>
+            <li class="show-for-medium ">
+              <a href="#">{{ page.title }}</a>
+              <ul class="menu vertical text-left align-left">
+                {% for post in page.get_children %}
+                <li><a href="{% pageurl post %}">{{ post.title }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+            {#<!-- <li class="menu-text show-for-medium umich-logo"><img src="{% static 'difusion_cultural/img/dif_umich.svg' %}" alt="umich"></li> -->#}
+            <li class="menu-text hamburger-button"><button class="menu-icon" type="button" data-toggle="mainNavCanvasMenu"></button></li>
+          </ul>
+        </div>
+    </nav>
+  </div>
+
+<div class="off-canvas position-right" id="mainNavCanvasMenu" data-off-canvas data-transition="overlap">
+
+    <button class="close-button" aria-label="Cerrar menu" type="button" data-close>
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    <div class="logo-offcanvas">
+      <a href="/">
+        <img src="{% static 'difusion_cultural/img/logo/dif_imagologo_web_01.svg' %}" alt="img">
+        <img src="{% static 'difusion_cultural/img/logo/dif_logotype_web_01.svg' %}" alt="logo">
+      </a>
+    </div>
+
+    <ul class="vertical menu accordion-menu" data-accordion-menu data-submenu-toggle="true">
+
+      {% wagtail_site as current_site %}
+      {#TODO: Fix Menu root #}
+      {% top_menu parent=current_site calling_page=self %}
+
+    </ul>
+
+</div>
+

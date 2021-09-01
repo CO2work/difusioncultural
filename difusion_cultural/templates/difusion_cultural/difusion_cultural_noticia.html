@@ -1,0 +1,187 @@
+{% extends "difusion_cultural/base.html" %}
+{% load wagtailimages_tags wagtailcore_tags wagtail_html_support navigation_tags gallery_tags %}
+
+{% block body_class %}template-difusionculturalnoticia{% endblock %}
+
+
+  {% block extra_css %}
+  <!-- PHOTOSWIPE -->
+  <!-- Core CSS file -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin="anonymous">
+
+  <!-- Skin CSS file (styling of UI - buttons, caption, etc.)
+       In the folder of skin CSS file there are also:
+       - .png and .svg icons sprite,
+       - preloader.gif (for browsers that do not support CSS animations) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin="anonymous">
+  {% endblock extra_css %}
+
+
+{% block navigation %}
+
+  {% include "./includes/navigation.html" %}
+
+{% endblock %}
+
+
+{% block content %}
+
+{% block grid %}
+<div class="grid-container">
+  <div class="grid-x">
+    {% block main-cell %}
+    <div class="medium-12 large-8 cell">
+      {% image page.imagen fill-600x400 as semihero_small %}
+      {% image page.imagen fill-800x600 as semihero_medium %}
+
+      <img
+       class="semihero  {{ page.categoria.slug }}"
+       src="{{ semihero_small.url }}" alt="{{ imagen.alt }}" data-interchange="[{{ semihero_small.url }}, small],
+      [{{ semihero_medium.url }}, medium]"
+       >
+    </div>
+
+    <div class="medium-10 medium-offset-1 large-6 large-offset-1 cell intro-offset noticia">
+
+      <div class="intro card box-shadow">
+
+        <div class="tags">
+          <ul class="menu">
+
+            <li>
+              <a href="../../categoria/{{ page.categoria.slug }}"><span class="label {{ page.categoria.slug }}">
+              {{ page.categoria }}</span></a>
+
+            </li>
+
+          </ul>
+        </div>
+
+
+        <h3>{{ page.title }}</h3>
+        <p class="lead">
+          {{ page.introduccion|richtext }}
+        </p>
+
+      </div>
+
+
+      <div class="article-body">
+        <div class="card borderless">
+          <ul class="menu vertical">
+            <li>
+              <i class="fa fa-calendar-o" aria-hidden="true"></i>
+              <span><strong> Fecha{% if page.fecha_inicio != page.fecha_fin %}(s){% endif %}: </strong></span>
+                {% if page.fecha_inicio.month != page.fecha_fin.month %}
+                  {% if page.fecha_inicio.year != page.fecha_fin.year %}
+                    {{ page.fecha_inicio|date:"l j \d\e F \d\e\l Y" }}
+                    {% else %}
+                    {{ page.fecha_inicio|date:"l j \d\e F" }}
+                  {% endif %}
+                {% else %}
+                  {{ page.fecha_inicio|date:"l j" }}
+                {% endif %}
+                {% if page.fecha_inicio != page.fecha_fin %}
+                    al {{ page.fecha_fin|date:"l j \d\e F \d\e\l\ Y" }}{% endif %}
+            </li>
+
+            <li>
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              <span><strong> Horario: </strong></span>
+               {{ page.hora_inicio }} -
+              {{ page.hora_fin }}
+            </li>
+
+            {% if page.ubicacion %}
+            <li class="ubicacion-item-icon">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+              <span><strong> Lugar:</strong></span> {{ page.ubicacion|richtext }}
+            </li>
+            {% endif %}
+          </ul>
+          <br>
+
+          {% if page.consideraciones %}
+
+            {{ page.consideraciones|richtext }}
+
+          {% endif %}
+
+        </div>
+
+
+        {{ page.cuerpo }}
+
+
+        <br>
+        <br>
+        <hr>
+        <!-- <div class="text-left">
+            {% for tag in page.etiquetas.all %}
+                <a href="../../etiqueta/{{ tag.slug }}">{{ tag }}</a>
+            {% endfor %}
+        </div> -->
+
+        <h6 class="">Etiquetas</h6>
+        <section class="tag-cloud-section">
+          <div class="tag-cloud in-article">
+            {% for tag in page.etiquetas.all %}
+            <a class="tag-cloud-individual-tag" href="/cartelera/etiqueta/{{ tag.slug }}">{{ tag }}</a>
+            {% endfor %}
+          </div>
+        </section>
+
+      </div>
+    </div>
+{% endblock main-cell %}
+
+{% block sidebar %}
+    <div class="medium-10 medium-offset-1 large-3 large-offset-1 cell side-bar">
+      {% if page.esta_vigente %}
+        <h6>Otros notas de interés:</h6>
+        <ul class="menu vertical">
+          {% for post in page.difusion_cultural_cartelera.get_next_posts|slice:":10" %}
+              {% if post.id != page.id %}
+              <li><a href="{% pageurl post %}">{{ post.title }}</a></li>
+              {% endif %}
+          {% endfor %}
+        </ul>
+        {% else %}
+            <h6>Otras notas de pasadas:</h6>
+            <ul class="menu vertical">
+                {% for post in page.difusion_cultural_cartelera.get_prev_posts|slice:":10" %}
+                    {% if post.id != page.id %}
+                    <li><a href="{% pageurl post %}">{{ post.title }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    </div>
+{% endblock sidebar %}
+
+
+
+    {% if page.galeria %}
+    <div class="medium-10 medium-offset-1 cell intro-offset">
+      <h4>Galería</h4>
+      {% gallery page.galeria %}
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock grid %}
+
+{% endblock content %}
+
+{% block extra_js %}
+
+  <!-- Core JS file -->
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin="anonymous"></script>
+
+  <!-- UI JS file -->
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin="anonymous"></script>
+
+{% endblock extra_js %}
+
