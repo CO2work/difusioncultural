@@ -104,9 +104,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'difusioncultural_v1',
-        'USER': 'root',
-        # 'USER': 'dcultdbwgtail01',
-        'PASSWORD': 'ReincarnationCollisionsTime#609',
+        'USER': 'dcultdbwgtail01',
+        'PASSWORD': 'SombriaCarnadaLiteraia#6.018',
         'HOST': 'localhost',
         'PORT': '3306',
     }
