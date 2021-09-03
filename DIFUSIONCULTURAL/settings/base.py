@@ -106,7 +106,7 @@ DATABASES = {
         'NAME': 'difusioncultural_v1',
         'USER': 'root',
         # 'USER': 'dcultdbwgtail01',
-        'PASSWORD': '',
+        'PASSWORD': 'ReincarnationCollisionsTime#609',
         'HOST': 'localhost',
         'PORT': '3306',
     }
