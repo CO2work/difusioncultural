@@ -95,8 +95,6 @@ WSGI_APPLICATION = 'DIFUSIONCULTURAL.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-with open(os.path.join(BASE_DIR, '../etc/mysqlpwd.txt')) as m:
-    MYSQL_PASSWORD = m.read().strip()
 
 DATABASES = {
     # 'default': {
@@ -108,7 +106,7 @@ DATABASES = {
         'NAME': 'difusioncultural_v1',
         'USER': 'root',
         # 'USER': 'dcultdbwgtail01',
-        'PASSWORD': MYSQL_PASSWORD,
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
     }
